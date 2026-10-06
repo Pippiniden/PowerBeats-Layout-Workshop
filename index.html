@@ -130,6 +130,12 @@ small,.hint{color:var(--muted);font-size:13px}
 .seg button+button{border-left:1px solid var(--line)}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 .setbar{display:flex;gap:12px 24px;flex-wrap:wrap;align-items:center}
+.diffstatus{font-size:12.5px;color:var(--muted);font-family:var(--f-mono)}
+.batchbox{display:grid;gap:8px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.batchhead{display:flex;gap:10px 16px;flex-wrap:wrap;align-items:center}
+.batchchecks{display:flex;gap:8px 16px;flex-wrap:wrap;align-items:center}
+.batchchecks .check{font-weight:500}
+.batchactions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .setbar select{padding:7px 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--raise)}
 .sliders{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
 .ctl{display:grid;align-content:start;gap:4px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface);min-width:0}
@@ -279,6 +285,7 @@ textarea#jsonOut{width:100%;height:120px;font-family:var(--f-mono);font-size:11.
     <div class="seg" role="group" data-i18n-aria="diff.aria" id="diffSeg">
       <button data-d="Beginner">Beginner</button><button data-d="Advanced">Advanced</button><button data-d="Expert">Expert</button>
     </div>
+    <small class="diffstatus" id="diffStatus"></small>
     <label class="field"><span data-i18n="mode"></span>
       <select id="mode"><option value="standard" data-i18n="mode.std"></option><option value="boxercise" data-i18n="mode.bx"></option></select></label>
     <div class="row" id="presetRow"></div>
@@ -336,6 +343,20 @@ textarea#jsonOut{width:100%;height:120px;font-family:var(--f-mono);font-size:11.
       <div class="field"><label for="metaName" data-i18n="meta.name"></label><input id="metaName" type="text"></div>
       <div class="field"><label for="metaAuthor" data-i18n="meta.author"></label><input id="metaAuthor" type="text" value="AutoGen+"></div>
       <div><small data-i18n="fname.h"></small><div class="fname" id="fname">—</div></div>
+      <div class="batchbox">
+        <div class="batchhead"><strong data-i18n="batch.title"></strong><small data-i18n="batch.hint"></small></div>
+        <div class="batchchecks">
+          <label class="check"><input type="checkbox" id="outBeginner" checked><span>Beginner</span></label>
+          <label class="check"><input type="checkbox" id="outAdvanced" checked><span>Advanced</span></label>
+          <label class="check"><input type="checkbox" id="outExpert" checked><span>Expert</span></label>
+        </div>
+        <div class="batchactions">
+          <button class="btn sm" id="btnOutCurrent" type="button" data-i18n="batch.current"></button>
+          <button class="btn sm" id="btnOutAll" type="button" data-i18n="batch.all"></button>
+          <button class="btn sm" id="btnGenerateSelected" type="button" data-i18n="batch.generate"></button>
+          <small class="diffstatus" id="batchStatus"></small>
+        </div>
+      </div>
       <label class="check"><input type="checkbox" id="optMerge" disabled><span><span data-i18n="merge"></span> <small id="mergeInfo"></small><br>
         <button class="btn sm" id="btnLoadJson" type="button" style="margin-top:4px" data-i18n="merge.load"></button><input type="file" id="fileJson" accept=".json,application/json" hidden></span></label>
       <div class="row">
@@ -418,6 +439,7 @@ en:{
   'o.lead':'Delay before the first note','o.lead.hint':'Even if the song starts right away, no notes are placed before this time.','lead.val':'{v} s',
   'o.seed':'Seed','o.reroll':'New variation','o.seed.hint':'The same seed and settings always give the same layout.',
   r4:'Result and export','meta.name':'Song name (name)','meta.author':'Author (author)','fname.h':'File name to save (must match the audio file)',
+  'batch.title':'Difficulties to export','batch.hint':'Checked difficulties are regenerated with their own settings and written into the same JSON.','batch.current':'Current only','batch.all':'All difficulties','batch.generate':'Regenerate selected','batch.none':'Select at least one difficulty.','batch.ready':'Ready: {list}',
   merge:'Add to an existing layout JSON','merge.load':'Load existing JSON','merge.none':'(none loaded)',
   'merge.info':'({name}: BPM {bpm} · offset {off} · difficulties: {have}) ','merge.noname':'untitled','merge.nodiff':'none','merge.use':'Use this BPM and offset',
   save:'Save JSON',copy:'Copy JSON',paths:'Where to put the files','paths.quest':'Quest (via SideQuest or similar)',
@@ -501,6 +523,7 @@ ja:{
   'o.lead':'最初のノーツまでの猶予','o.lead.hint':'曲が頭から鳴っていても、この秒数より前には置きません。','lead.val':'{v} 秒',
   'o.seed':'シード','o.reroll':'別パターンで再生成','o.seed.hint':'同じシードと設定なら毎回同じ譜面になります。',
   r4:'結果と書き出し','meta.name':'曲名（name）','meta.author':'作者（author）','fname.h':'保存するファイル名（音源と同じ名前にする必要があります）',
+  'batch.title':'一括出力する難易度','batch.hint':'チェックした難易度を、それぞれの設定で再生成して1つのJSONにまとめます。','batch.current':'現在だけ','batch.all':'全難易度','batch.generate':'選択分を再生成','batch.none':'少なくとも1つの難易度を選んでください。','batch.ready':'準備完了：{list}',
   merge:'既存の譜面JSONに追加する','merge.load':'既存JSONを読み込む','merge.none':'（未読込）',
   'merge.info':'（{name}：BPM {bpm}・offset {off}・入っている難易度 {have}） ','merge.noname':'名称なし','merge.nodiff':'なし','merge.use':'このBPMとoffsetを使う',
   save:'JSONを保存',copy:'JSONをコピー',paths:'置き場所','paths.quest':'Quest（SideQuest などで）',
@@ -1012,12 +1035,13 @@ function cloneInst(src,start,mirror){
     const n=ent.at(r);n.a=e.a.map(f);n.s1=e.s1.map(f);n.s2=e.s2.map(f)}
   return {...src,start,ent,copyOf:src.start,mirrored:!!mirror};
 }
-function generate(){
+function generate(diffOverride=state.diff){
+  const diff=diffOverride||state.diff;
   const A=state.A,F=state.F,LG=state.LG;if(!A||!F)return null;
-  const S=state.settings[state.diff],O=state.opts,T=state.tempo;
-  const rng=mulberry32(O.seed*7919+['Beginner','Advanced','Expert'].indexOf(state.diff)*101+1);
+  const S=state.settings[diff],O=state.opts,T=state.tempo;
+  const rng=mulberry32(O.seed*7919+DIFFS.indexOf(diff)*101+1);
   const p=60/T.bpm,off=offsetOf();
-  const BX=state.bx[state.diff],isBx=state.mode==='boxercise';
+  const BX=state.bx[diff],isBx=state.mode==='boxercise';
   const w={};let allZero=true;for(const c of CAT_IDS){w[c]=S[c];if(S[c]>0)allZero=false}
   if(isBx)allZero=BX_ELEMS.every(e=>!(BX[e.id]>0));
   const o={double:S.double,spike:S.spike,duckOK:S.SQUAT>0};
@@ -1048,7 +1072,7 @@ function generate(){
     let avail=limit;
     for(let k=cur;k<cur+avail;k++)if(SIL[k]){avail=Math.floor((k-cur)/4)*4;break}
     if(avail<4){cur+=4;last=null;continue}
-    const ctx={rng,bx:BX,stance:O.stance,cur,mem,streamCalm:O.streamCalm,diff:state.diff,bpm:T.bpm,density:O.density,w,allZero,o,powerP,last,level:levelAt(cur),avail:Math.min(avail,16),side:rng()<0.5?1:-1};
+    const ctx={rng,bx:BX,stance:O.stance,cur,mem,streamCalm:O.streamCalm,diff,bpm:T.bpm,density:O.density,w,allZero,o,powerP,last,level:levelAt(cur),avail:Math.min(avail,16),side:rng()<0.5?1:-1};
     const pl=planner(ctx);
     if(!pl){cur+=4;last=null;continue}
     const ins={start:cur,len:pl.len,cat:pl.cat,sub:pl.sub,step:pl.step,label:pl.label,ent:pl.ent,copyOf:null,combos:pl.combos||[],stance:pl.stance};
@@ -1073,11 +1097,13 @@ function generate(){
 }
 
 /* ================= State & UI ================= */
+const DIFFS=['Beginner','Advanced','Expert'];
 const state={audio:null,A:null,F:null,LG:null,snd:null,baseName:'',isDemo:false,cands:[],
   tempo:{bpm:120,phase0:0,db:0,nudge:0},diff:'Expert',mode:'standard',
   settings:JSON.parse(JSON.stringify(DEF)),bx:JSON.parse(JSON.stringify(BX_DEF)),
   opts:{density:0,repeat:true,thr:0.7,minLag:8,mirror:false,silence:-32,leadIn:2,seed:1,streamCalm:true,stance:'orthodox',endMode:'empty'},blocks:[],dragRange:null,
-  result:null,existing:null,busy:false};
+  result:null,results:{Beginner:null,Advanced:null,Expert:null},resultVersion:{Beginner:-1,Advanced:-1,Expert:-1},globalVersion:0,
+  exportDiffs:{Beginner:true,Advanced:true,Expert:true},existing:null,busy:false};
 function offsetOf(){const T=state.tempo,p=60/T.bpm;let o=T.phase0+T.db*p+T.nudge/1000;while(o<0)o+=4*p;return o}
 
 const toastEl=$('#toast');let toastT;
@@ -1090,7 +1116,7 @@ async function loadAudio(arrayBuf,name,isDemo,preDecoded){
   try{
     setStatus('st.loading',0.02);await tick();
     const buf=preDecoded||await decodeToMono(arrayBuf);
-    state.audio=buf;state.isDemo=isDemo;P.cursor=0;state.blocks=[];renderBlocks();resetTap();state.baseName=name.replace(/\.[^.]+$/,'');state.existing=null;updateMergeUI();
+    state.audio=buf;state.isDemo=isDemo;P.cursor=0;state.blocks=[];state.results={Beginner:null,Advanced:null,Expert:null};state.resultVersion={Beginner:-1,Advanced:-1,Expert:-1};state.result=null;renderBlocks();resetTap();state.baseName=name.replace(/\.[^.]+$/,'');state.existing=null;updateMergeUI();
     setStatus('st.analyzing',0.05);
     const x=await resampleMono(buf);
     const A=await analyze(x,p=>setStatus('st.analyzing',p));
@@ -1125,7 +1151,7 @@ function afterTempo(){
   state.snd=soundRange(A,state.opts.silence);
   state.F=beatFeatures(A,state.tempo.bpm,offsetOf(),state.snd);
   state.LG=computeLag(state.F,state.opts.thr,state.opts.minLag);
-  renderTempo();regen();
+  invalidateResults();renderTempo();regen();
 }
 function renderTempo(){
   const T=state.tempo;
@@ -1170,9 +1196,9 @@ function buildSettingsUI(){
   $('#bxInterval').addEventListener('change',e=>{state.bx[state.diff].interval=e.target.value;regen()});
   $('#bxRest').addEventListener('input',e=>{state.bx[state.diff].rest=+e.target.value;syncSliders();regenSoon()});
   $('#bxLen').addEventListener('input',e=>{state.bx[state.diff].length=+e.target.value;syncSliders();regenSoon()});
-  $('#mode').addEventListener('change',e=>{state.mode=e.target.value;syncMode();regen()});
+  $('#mode').addEventListener('change',e=>{state.mode=e.target.value;invalidateResults();syncMode();regen()});
   syncMode();
-  for(const b of $('#diffSeg').querySelectorAll('button'))b.onclick=()=>{state.diff=b.dataset.d;syncSliders();regen()};
+  for(const b of $('#diffSeg').querySelectorAll('button'))b.onclick=()=>showDifficulty(b.dataset.d);
   for(const b of $('#langSeg').querySelectorAll('button'))b.onclick=()=>setLang(b.dataset.l);
 }
 function setLang(l){
@@ -1181,6 +1207,7 @@ function setLang(l){
   setStatus(lastStatus[0],null,lastStatus[1]);if(lastMeta)renderFileMeta(...lastMeta);
   $('#saveNote').textContent='';
   if(state.A&&state.F){renderTempo();renderResult();drawTimeline()}
+  syncBatchStatus();syncDiffStatus();
 }
 function syncMode(){
   const bx=state.mode==='boxercise';$('#stdPanel').hidden=bx;$('#bxPanel').hidden=!bx;
@@ -1203,7 +1230,7 @@ function syncSliders(){
 const optFmts=[];
 function bindOpts(){
   const O=state.opts;
-  const bind=(id,key,fmt,heavy)=>{const el=$('#'+id),vo=$('#'+id+'V');if(vo)optFmts.push(()=>{vo.textContent=fmt(O[key])});el.addEventListener('input',()=>{O[key]=el.type==='checkbox'?el.checked:+el.value;if(vo)vo.textContent=fmt(O[key]);
+  const bind=(id,key,fmt,heavy)=>{const el=$('#'+id),vo=$('#'+id+'V');if(vo)optFmts.push(()=>{vo.textContent=fmt(O[key])});el.addEventListener('input',()=>{O[key]=el.type==='checkbox'?el.checked:+el.value;if(vo)vo.textContent=fmt(O[key]);invalidateResults();
     if(heavy)afterTempoSoon();else regenSoon()});if(vo)vo.textContent=fmt(O[key])};
   bind('optDensity','density',v=>t('density.vals')[v+2]);
   bind('optRepeat','repeat',()=>'');
@@ -1220,13 +1247,51 @@ let rgT,atT;
 const regenSoon=()=>{clearTimeout(rgT);rgT=setTimeout(regen,120)};
 const afterTempoSoon=()=>{clearTimeout(atT);atT=setTimeout(afterTempo,200)};
 
+function invalidateResults(){state.globalVersion++}
+function ensureDifficultyResult(d){
+  if(!state.F)return null;
+  if(!state.results[d]||state.resultVersion[d]!==state.globalVersion){
+    state.results[d]=generate(d);
+    state.resultVersion[d]=state.globalVersion;
+  }
+  return state.results[d];
+}
+function syncDiffStatus(){
+  const ready=DIFFS.filter(d=>state.results[d]&&state.resultVersion[d]===state.globalVersion);
+  const el=$('#diffStatus');if(el)el.textContent=ready.length?t('batch.ready',{list:ready.join(' / ')}):'';
+}
+function showDifficulty(d){
+  state.diff=d;
+  ensureDifficultyResult(d);
+  state.result=state.results[d];
+  syncSliders();syncMode();renderResult();drawTimeline();rebuildClicks();syncDiffStatus();syncBatchStatus();
+}
 function regen(){
   if(!state.F)return;
-  state.result=generate();
-  renderResult();drawTimeline();rebuildClicks();
+  state.results[state.diff]=generate(state.diff);
+  state.result=state.results[state.diff];
+  state.resultVersion[state.diff]=state.globalVersion;
+  renderResult();drawTimeline();rebuildClicks();syncDiffStatus();syncBatchStatus();
+}
+function selectedDiffs(){return DIFFS.filter(d=>state.exportDiffs[d])}
+function syncBatchStatus(){
+  const el=$('#batchStatus');if(!el)return;
+  const ds=selectedDiffs();el.textContent=ds.length?t('batch.ready',{list:ds.join(' / ')}):t('batch.none');
+}
+function setExportDiffs(list){
+  const set=new Set(list);for(const d of DIFFS){state.exportDiffs[d]=set.has(d);$('#out'+d).checked=state.exportDiffs[d]}
+  syncBatchStatus();
+}
+function regenerateSelected(){
+  if(!state.F)return false;
+  const ds=selectedDiffs();if(!ds.length){toast(t('batch.none'));return false}
+  for(const d of ds){state.results[d]=generate(d);state.resultVersion[d]=state.globalVersion}
+  state.result=state.results[state.diff]||state.results[ds[0]];
+  renderResult();drawTimeline();rebuildClicks();syncDiffStatus();syncBatchStatus();
+  return true;
 }
 function renderResult(){
-  const R=state.result;if(!R)return;const BS=R.beats.filter(b=>b.beatNo!==R.endMarker);
+  const R=state.results[state.diff]||state.result;if(!R)return;const BS=R.beats.filter(b=>b.beatNo!==R.endMarker);
   const p=60/state.tempo.bpm,off=offsetOf();
   const cnt={},bcnt={};let hits=0,walls=0,copied=0;
   for(const c of CAT_IDS){cnt[c]=0;bcnt[c]=0}
@@ -1436,24 +1501,37 @@ function updateMergeUI(){const j=state.existing,cb=$('#optMerge'),inf=$('#mergeI
   inf.appendChild(b);
 }
 function buildJSON(){
-  const R=state.result;if(!R)return null;const blank=()=>({isGenerated:true,beats:[],maxHighscore:0});
+  const ds=selectedDiffs();if(!ds.length)return null;
+  const blank=()=>({isGenerated:true,beats:[],maxHighscore:0});
   const bpm=state.tempo.bpm,off=Math.round(offsetOf()*10000)/10000;
   const out={name:$('#metaName').value||state.baseName,author:$('#metaAuthor').value||'AutoGen+',bpm,offset:off,schemaVersion:2,Beginner:blank(),Advanced:blank(),Expert:blank()};
   let note='',warn=false;
-  if(state.existing&&$('#optMerge').checked){const j=state.existing;
-    if(Math.abs(+j.bpm-bpm)<1e-6&&Math.abs(+j.offset-off)<5e-4){for(const d of ['Beginner','Advanced','Expert'])if(d!==state.diff)out[d]=j[d];out.offset=+j.offset;note=t('json.kept')}
-    else{note=t('json.mismatch');warn=true}}
-  out[state.diff]={isGenerated:false,beats:R.beats,maxHighscore:0};
+  if(state.existing&&$('#optMerge').checked){
+    const j=state.existing;
+    if(Math.abs(+j.bpm-bpm)<1e-6&&Math.abs(+j.offset-off)<5e-4){
+      for(const d of DIFFS)if(!state.exportDiffs[d])out[d]=j[d];
+      out.offset=+j.offset;note=t('json.kept');
+    }else{note=t('json.mismatch');warn=true}
+  }
+  for(const d of ds){
+    const R=state.results[d]||generate(d);
+    if(!R)continue;
+    out[d]={isGenerated:false,beats:R.beats,maxHighscore:0};
+  }
   return {json:JSON.stringify(out,null,2),note,warn};
+}
+async function prepareExport(){
+  if(!regenerateSelected())return null;
+  return buildJSON();
 }
 let dlCap=null;
 (async()=>{try{if(window.claude&&window.claude.use)dlCap=await window.claude.use('downloads')}catch(e){dlCap=null}})();
-$('#btnSave').onclick=async()=>{const b=buildJSON();if(!b)return;const fname=$('#fname').textContent;$('#saveNote').textContent=b.note;$('#saveNote').classList.toggle('warn',b.warn);
+$('#btnSave').onclick=async()=>{const b=await prepareExport();if(!b)return;const fname=$('#fname').textContent;$('#saveNote').textContent=b.note;$('#saveNote').classList.toggle('warn',b.warn);
   if(dlCap){try{await dlCap.save({filename:fname,data:b.json});toast(t('save.ok'));return}catch(err){if(err&&err.code==='declined')return}}
   try{const url=URL.createObjectURL(new Blob([b.json],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=fname;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000)}catch(e){}
   const ta=$('#jsonOut');ta.hidden=false;ta.value=b.json;
 };
-$('#btnCopy').onclick=async()=>{const b=buildJSON();if(!b)return;$('#saveNote').textContent=b.note;
+$('#btnCopy').onclick=async()=>{const b=await prepareExport();if(!b)return;$('#saveNote').textContent=b.note;
   try{await navigator.clipboard.writeText(b.json);toast(t('copy.ok',{fname:$('#fname').textContent}))}
   catch(e){const ta=$('#jsonOut');ta.hidden=false;ta.value=b.json;ta.select();toast(t('copy.sel'))}};
 $('#metaName').addEventListener('input',()=>{});
@@ -1486,7 +1564,10 @@ async function synthDemo(){
 }
 
 /* ================= boot ================= */
-applyStatic();buildSettingsUI();bindOpts();syncSliders();setPlayLabel(false);tapText();updateMergeUI();renderBlocks();setStatus('st.prompt',0);$('#optEnd').value=state.opts.endMode;
+applyStatic();buildSettingsUI();bindOpts();syncSliders();setPlayLabel(false);tapText();updateMergeUI();renderBlocks();syncBatchStatus();setStatus('st.prompt',0);$('#optEnd').value=state.opts.endMode;
+$('#btnOutCurrent').onclick=()=>setExportDiffs([state.diff]);
+$('#btnOutAll').onclick=()=>setExportDiffs(DIFFS);
+$('#btnGenerateSelected').onclick=regenerateSelected;
 (async()=>{try{setStatus('st.demoprep',0.01);const buf=await synthDemo();await loadAudio(null,'demo_song.wav',true,buf)}catch(e){console.error(e);setStatus('st.prompt',0)}})();
 window.__pb={state,generate,refineBpm,detectTempo,offsetOf,buildJSON};
 </script>
